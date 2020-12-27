@@ -1,0 +1,32 @@
+<HTML>
+
+<HEAD>
+	<TITLE>Custom Test</TITLE>
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script langauge="javascript">
+		$( document ).ready(function() {
+			alert("jquery load");
+			$("#jquerybtn").on('click', function(e) {
+				alert("Jquery - "+JSObject.get_pos('1'))
+			})
+		})
+
+	</script>
+</HEAD>
+
+<BODY style="font-family:arial;font-size:10pt;" bgcolor="#eeeeee">
+	<h2><b><u>Custom Web Browser Test Page</u></b></h2>
+
+	<p>Call C++ Function from javascript.</p>
+	<p>onclick="JSObject.log('click!')"</p>
+	<input type="button" value="Click" onclick="JSObject.log('click!')"><BR><BR><BR>
+	<p>set/get in-memory value</p>
+	<input type="button" value="SetVal" onclick="JSObject.setevar('1','asd')"><BR><BR><BR>
+	<input type="button" value="GetVal" onclick="alert(JSObject.getevar('1'))"><BR><BR><BR>
+	<p>c++ callback</p>
+	<input type="button" value="return val from c++" onclick="alert(JSObject.get_pos('1'))"><BR><BR><BR>
+	<p>jquery test</p>
+	<input id="jquerybtn" type="button" value="jquery test"><BR><BR><BR>
+</BODY>
+
+</HTML>

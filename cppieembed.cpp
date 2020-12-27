@@ -27,8 +27,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	webformDispatchImpl = new WebformDispatchImpl(jsobj);
 
 	webWindow = new WebWindow(webformDispatchImpl);
-	webWindow->Create(hInstance, 200, 100, 400, 400, true);
-	webWindow->webForm->Go("http://localhost/lionwiki");
+	webWindow->Create(hInstance, 200, 100, 600, 690, true);
+
+	TCHAR Buffer[MAX_PATH];
+	DWORD dwRet;
+	dwRet = GetCurrentDirectory(MAX_PATH, Buffer);
+	std::string appPath = Buffer;
+	TCHAR* indexPath = _T("../html/index.html");
+	appPath = appPath + indexPath;
+
+	webWindow->webForm->Go(appPath.c_str());
 
 	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0)) {

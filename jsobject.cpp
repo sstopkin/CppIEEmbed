@@ -11,6 +11,11 @@ JSObject::JSObject() : ref(0)
 	idMap.insert(std::make_pair(L"readfile", DISPID_USER_READFILE));
 	idMap.insert(std::make_pair(L"getevar", DISPID_USER_GETVAL));
 	idMap.insert(std::make_pair(L"setevar", DISPID_USER_SETVAL));
+	idMap.insert(std::make_pair(L"get_pos", DISPID_GET_POS));
+	idMap.insert(std::make_pair(L"log", DISPID_USER_LOG));
+	//getProperty - cookie
+	//setProperty - cookie
+	//close - windows close
 }
 
 HRESULT STDMETHODCALLTYPE JSObject::QueryInterface(REFIID riid, void **ppv)
@@ -42,7 +47,7 @@ ULONG STDMETHODCALLTYPE JSObject::Release()
 		OutputDebugString("JSObject::Release(): delete this");
 		delete this;
 	}
-	
+
 	return tmp;
 }
 
@@ -94,6 +99,17 @@ HRESULT STDMETHODCALLTYPE JSObject::Invoke(DISPID dispIdMember, REFIID riid,
 		}
 
 		switch (dispIdMember) {
+			case DISPID_USER_LOG: {
+				OutputDebugStringA(args[0].c_str());
+				break;
+			}
+			case DISPID_GET_POS: {
+				//https://stackoverflow.com/questions/45865768/iwebbrowser2-using-a-uint8array-filling-without-looping
+				pVarResult->vt = VT_I4;
+				pVarResult->intVal = 12345;
+				hr = S_OK;
+				break;
+			}
 			case DISPID_USER_EXECUTE: {
 				//LSExecute(NULL, args[0].c_str(), SW_NORMAL);
 
