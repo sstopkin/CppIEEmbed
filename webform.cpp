@@ -9,6 +9,7 @@
 #include "TOleClientSite.h"
 #include "toleinplaceframe.h"
 #include "webformdispatchhandler.h"
+#include "TIHTMLEditDesigner.h"
 
 WebForm::WebForm(WebformDispatchHandler *wdh) :
 	ref(0), ibrowser(NULL), cookie(0), isnaving(0), url(NULL), kurl(NULL),
@@ -195,7 +196,7 @@ IHTMLDocument2 *WebForm::GetDoc()
 {
 	IDispatch *dispatch = 0;
 	ibrowser->get_Document(&dispatch);
-	
+
 	if (dispatch == NULL) {
 		return NULL;
 	}
@@ -203,7 +204,7 @@ IHTMLDocument2 *WebForm::GetDoc()
 	IHTMLDocument2 *doc;
 	dispatch->QueryInterface(IID_IHTMLDocument2, (void**)&doc);
 	dispatch->Release();
-	
+
 	return doc;
 }
 
@@ -236,6 +237,10 @@ void WebForm::AddCustomObject(IDispatch *custObj, std::string name)
 {
 	IHTMLDocument2 *doc = GetDoc();
 
+	IHTMLEditServices* m_pServices = NULL;
+	IServiceProvider* pTemp;
+	TIHTMLEditDesigner* cdes = new TIHTMLEditDesigner(this);
+
 	if (doc == NULL) {
 		return;
 	}
@@ -260,7 +265,7 @@ void WebForm::AddCustomObject(IDispatch *custObj, std::string name)
 	BSTR objName = SysAllocStringLen(0, lenW);
 	MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, name.c_str(), -1, objName, lenW);
 
-	DISPID dispid; 
+	DISPID dispid;
 	HRESULT hr = winEx->GetDispID(objName, fdexNameEnsure, &dispid);
 
 	SysFreeString(objName);
@@ -278,12 +283,35 @@ void WebForm::AddCustomObject(IDispatch *custObj, std::string name)
 	params.cArgs = 1;
 	params.cNamedArgs = 1;
 
-	hr = winEx->InvokeEx(dispid, LOCALE_USER_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL); 
+	hr = winEx->InvokeEx(dispid, LOCALE_USER_DEFAULT, DISPATCH_PROPERTYPUT, &params, NULL, NULL, NULL);
 	winEx->Release();
 
 	if (FAILED(hr)) {
 		return;
 	}
+
+	if (doc == (IHTMLDocument2 *)NULL)
+		return;
+	doc->QueryInterface(IID_IServiceProvider, (void **)&pTemp);
+	if (pTemp != (IServiceProvider *)NULL)
+	{
+		pTemp->QueryService(SID_SHTMLEditServices, IID_IHTMLEditServices, (void **)&m_pServices);
+		if (m_pServices != (IHTMLEditServices *)NULL)
+		{
+			m_pServices->AddDesigner(cdes);
+		}
+	}
+	doc->Release();
+}
+
+HRESULT WebForm::ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT *pvaIn, VARIANT *pvaOut)
+{
+    HRESULT hr;
+
+    //ASSERT(ibrowser != NULL);
+
+    hr = ibrowser->ExecWB(cmdID, cmdexecopt, pvaIn, pvaOut);
+    return hr;
 }
 
 void WebForm::DocumentComplete(const wchar_t *)
@@ -334,12 +362,12 @@ ULONG STDMETHODCALLTYPE WebForm::AddRef()
 ULONG STDMETHODCALLTYPE WebForm::Release()
 {
 	int tmp = InterlockedDecrement(&ref);
-	
+
 	if (tmp == 0) {
 		OutputDebugString("WebForm::Release(): delete this");
 		delete this;
 	}
-	
+
 	return tmp;
 }
 
@@ -503,7 +531,8 @@ HRESULT STDMETHODCALLTYPE WebForm::Invoke(DISPID dispIdMember, REFIID riid,
 HRESULT STDMETHODCALLTYPE WebForm::GetHostInfo(DOCHOSTUIINFO *pInfo)
 {
 	pInfo->dwFlags = (hasScrollbars ? 0 : DOCHOSTUIFLAG_SCROLL_NO) | DOCHOSTUIFLAG_NO3DOUTERBORDER;
-	
+	//pInfo->dwDoubleClick = DOCHOSTUIDBLCLK_DEFAULT;//todo
+
 	return S_OK;
 }
 

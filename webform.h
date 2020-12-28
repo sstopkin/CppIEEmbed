@@ -48,7 +48,7 @@ public:
 	WebForm(WebformDispatchHandler *wdh);
 	~WebForm();
 	void create(HWND hWndParent, HINSTANCE hInstance, UINT id, bool showScrollbars);
-	void CloseThread();
+	//void CloseThread();
 	void Close();
 	void Go(const TCHAR *fn);
 	void Forward();
@@ -88,7 +88,10 @@ public:
 		LPOLESTR lpstrCaption, DWORD dwType, LPOLESTR lpstrHelpFile,
 		DWORD dwHelpContext, LRESULT *plResult);
 
-	void BeforeNavigate2(const wchar_t *url, short *cancel);
+	//IHTMLEditDesigner
+	HRESULT ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut);
+
+	void BeforeNavigate(const wchar_t *url, short *cancel);
 	void DocumentComplete(const wchar_t *url);
 };
 

@@ -92,5 +92,8 @@
     <ClInclude Include="webwindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TIHTMLEditDesigner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

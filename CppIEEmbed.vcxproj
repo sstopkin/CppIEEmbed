@@ -107,6 +107,7 @@
     <ClInclude Include="tdispatch.h" />
     <ClInclude Include="tdochostshowui.h" />
     <ClInclude Include="tdochostuihandler.h" />
+    <ClInclude Include="TIHTMLEditDesigner.h" />
     <ClInclude Include="toleclientsite.h" />
     <ClInclude Include="toleinplaceframe.h" />
     <ClInclude Include="toleinplacesite.h" />

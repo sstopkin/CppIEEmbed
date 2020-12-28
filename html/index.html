@@ -4,17 +4,25 @@
 	<TITLE>Custom Test</TITLE>
 	<script type="text/javascript" src="jquery.min.js"></script>
 	<script langauge="javascript">
-		$( document ).ready(function() {
+		$(document).ready(function() {
 			alert("jquery load");
 			$("#jquerybtn").on('click', function(e) {
-				alert("Jquery - "+JSObject.get_pos('1'))
+				alert("Jquery - " + JSObject.get_pos('1'))
 			})
 		})
 
+		var allow_move = true;
+		$(document).on('mousedown', function(e) {
+			alert(JSON.stringify({
+				pageX: e.pageX.toString(),
+				pageY: e.pageY.toString()
+			}))
+		});
 	</script>
 </HEAD>
 
 <BODY style="font-family:arial;font-size:10pt;" bgcolor="#eeeeee">
+	<span class="header_title">CppIEEmbed</span>
 	<h2><b><u>Custom Web Browser Test Page</u></b></h2>
 
 	<p>Call C++ Function from javascript.</p>
@@ -27,6 +35,7 @@
 	<input type="button" value="return val from c++" onclick="alert(JSObject.get_pos('1'))"><BR><BR><BR>
 	<p>jquery test</p>
 	<input id="jquerybtn" type="button" value="jquery test"><BR><BR><BR>
+	<input id="txt" type="text" value="test"/>
 </BODY>
 
 </HTML>
